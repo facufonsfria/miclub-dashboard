@@ -29,6 +29,9 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  button { font-family: 'Barlow', sans-serif; background: none; border: none; }
+  /* Touch fix iOS Safari: todos los clicables responden al tap */
+  button, [onclick], .nav-item, .nav-subitem, .kpi-card, .alert-item, .partido-card, .noticia-card { touch-action: manipulation; cursor: pointer; }
 
   body {
     font-family: 'Barlow', sans-serif;
@@ -120,10 +123,12 @@
   }
   .nav-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 9px 16px;
+    padding: 9px 16px; width: 100%; text-align: left;
     cursor: pointer;
     color: rgba(255,255,255,0.62); font-size: 14px;
     border-left: 3px solid transparent;
+    border-top: none; border-right: none; border-bottom: none;
+    background: none;
     transition: all 0.15s; user-select: none;
     position: relative;
   }
@@ -137,9 +142,12 @@
   .nav-submenu.visible { display: block; }
   .nav-subitem {
     display: flex; align-items: center; gap: 10px;
-    padding: 8px 16px 8px 38px;
+    padding: 8px 16px 8px 38px; width: 100%; text-align: left;
     cursor: pointer; color: rgba(255,255,255,0.48); font-size: 13px;
-    border-left: 3px solid transparent; transition: all 0.15s;
+    border-left: 3px solid transparent;
+    border-top: none; border-right: none; border-bottom: none;
+    background: none;
+    transition: all 0.15s;
   }
   .nav-subitem:hover { color: var(--white); background: rgba(255,255,255,0.05); }
   .nav-subitem.active { color: var(--white); font-weight: 500; border-left-color: rgba(255,255,255,0.4); }
@@ -490,9 +498,10 @@
   .bnav-inner { display: flex; width: 100%; }
   .bnav-item {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-    padding: 5px 4px; cursor: pointer;
+    padding: 5px 4px; cursor: pointer; touch-action: manipulation;
     color: var(--gray-400); font-size: 10px; font-weight: 500;
     transition: color 0.15s;
+    background: none; border: none; outline: none;
   }
   .bnav-item.active { color: var(--cart-blue); }
   .bnav-item .bnav-icon { font-size: 20px; line-height: 1; }
@@ -526,35 +535,35 @@
 
   <nav class="sidebar-nav">
     <div class="nav-section-label">Principal</div>
-    <div class="nav-item active" onclick="goTo('dashboard', this)">
+    <button class="nav-item active" onclick="goTo('dashboard', this)">
       <span class="icon">📊</span> Dashboard
-    </div>
-    <div class="nav-item" onclick="goTo('socios', this)">
+    </button>
+    <button class="nav-item" onclick="goTo('socios', this)">
       <span class="icon">👥</span> Socios
-    </div>
-    <div class="nav-item" onclick="goTo('finanzas', this)">
+    </button>
+    <button class="nav-item" onclick="goTo('finanzas', this)">
       <span class="icon">💰</span> Finanzas
-    </div>
+    </button>
 
     <div class="nav-section-label">Deportivo</div>
-    <div class="nav-item" id="disc-toggle" onclick="toggleDisc(this)">
+    <button class="nav-item" id="disc-toggle" onclick="toggleDisc(this)">
       <span class="icon">⚽</span> Disciplinas
       <span class="chevron">▶</span>
-    </div>
+    </button>
     <div class="nav-submenu" id="disc-submenu">
-      <div class="nav-subitem" onclick="goToDisc('futbol', this)"><span class="dot"></span> Fútbol</div>
-      <div class="nav-subitem" onclick="goToDisc('basquet', this)"><span class="dot"></span> Básquet</div>
-      <div class="nav-subitem" onclick="goToDisc('hockey', this)"><span class="dot"></span> Hockey</div>
-      <div class="nav-subitem" onclick="goToDisc('volley', this)"><span class="dot"></span> Vóley</div>
+      <button class="nav-subitem" onclick="goToDisc('futbol', this)"><span class="dot"></span> Fútbol</button>
+      <button class="nav-subitem" onclick="goToDisc('basquet', this)"><span class="dot"></span> Básquet</button>
+      <button class="nav-subitem" onclick="goToDisc('hockey', this)"><span class="dot"></span> Hockey</button>
+      <button class="nav-subitem" onclick="goToDisc('volley', this)"><span class="dot"></span> Vóley</button>
     </div>
 
     <div class="nav-section-label">Club</div>
-    <div class="nav-item" onclick="goTo('informacion', this)">
+    <button class="nav-item" onclick="goTo('informacion', this)">
       <span class="icon">🏟️</span> Información del Club
-    </div>
-    <div class="nav-item" onclick="goTo('configuracion', this)">
+    </button>
+    <button class="nav-item" onclick="goTo('configuracion', this)">
       <span class="icon">⚙️</span> Configuración
-    </div>
+    </button>
   </nav>
 
   <div class="sidebar-footer">
@@ -1175,21 +1184,21 @@
 <!-- ════════════════ BOTTOM NAV (mobile) ════════════════ -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
-    <div class="bnav-item active" id="bnav-dashboard" onclick="goToMobile('dashboard', 'bnav-dashboard')">
-      <div class="bnav-icon">📊</div><span>Inicio</span>
-    </div>
-    <div class="bnav-item" id="bnav-socios" onclick="goToMobile('socios', 'bnav-socios')">
-      <div class="bnav-icon">👥</div><span>Socios</span>
-    </div>
-    <div class="bnav-item" id="bnav-finanzas" onclick="goToMobile('finanzas', 'bnav-finanzas')">
-      <div class="bnav-icon">💰</div><span>Finanzas</span>
-    </div>
-    <div class="bnav-item" id="bnav-disciplinas" onclick="goToMobile('disciplinas', 'bnav-disciplinas')">
-      <div class="bnav-icon">⚽</div><span>Deporte</span>
-    </div>
-    <div class="bnav-item" id="bnav-menu" onclick="openSidebar()">
-      <div class="bnav-icon">☰</div><span>Más</span>
-    </div>
+    <button class="bnav-item active" id="bnav-dashboard" onclick="goToMobile('dashboard', 'bnav-dashboard')">
+      <span class="bnav-icon">📊</span><span>Inicio</span>
+    </button>
+    <button class="bnav-item" id="bnav-socios" onclick="goToMobile('socios', 'bnav-socios')">
+      <span class="bnav-icon">👥</span><span>Socios</span>
+    </button>
+    <button class="bnav-item" id="bnav-finanzas" onclick="goToMobile('finanzas', 'bnav-finanzas')">
+      <span class="bnav-icon">💰</span><span>Finanzas</span>
+    </button>
+    <button class="bnav-item" id="bnav-disciplinas" onclick="goToMobile('disciplinas', 'bnav-disciplinas')">
+      <span class="bnav-icon">⚽</span><span>Deporte</span>
+    </button>
+    <button class="bnav-item" id="bnav-menu" onclick="openSidebar()">
+      <span class="bnav-icon">☰</span><span>Más</span>
+    </button>
   </div>
 </nav>
 
