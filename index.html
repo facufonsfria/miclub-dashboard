@@ -95,9 +95,12 @@
     border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800; font-size: 13px;
-    color: var(--cart-blue); letter-spacing: -0.5px;
+    overflow: hidden;
+    padding: 3px;
+  }
+  .logo-badge img {
+    width: 100%; height: 100%;
+    object-fit: contain;
   }
   .logo-text span:first-child {
     font-family: 'Barlow Condensed', sans-serif;
@@ -514,7 +517,7 @@
 <!-- ════════════════════════════ SIDEBAR ════════════════════════════ -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-badge">CART</div>
+    <div class="logo-badge"><img src="https://res.cloudinary.com/djquur0ct/image/upload/f_auto,q_auto/Logo-CART_kcg35b" alt="Escudo CART"></div>
     <div class="logo-text">
       <span>MiClub</span>
       <span>Atlético Río Tercero</span>
@@ -769,7 +772,7 @@
                 <td><strong>0001</strong></td>
                 <td><strong>Fernández, Lucas</strong></td>
                 <td>0351 412 8890</td>
-                <td>lucas.fdz@gmail.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e78b92848694c981839da7808a868e8bc984888a">[email&#160;protected]</a></td>
                 <td>12/03/2018</td>
                 <td>28/07/2025</td>
                 <td><span class="badge badge-blue">Grupo fam.</span></td>
@@ -780,7 +783,7 @@
                 <td><strong>0002</strong></td>
                 <td><strong>Rodríguez, María</strong></td>
                 <td>0358 419 2341</td>
-                <td>mrodriguez@hotmail.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e78a958883958e8092829da78f88938a868e8bc984888a">[email&#160;protected]</a></td>
                 <td>05/06/2015</td>
                 <td>—</td>
                 <td><span class="badge badge-gray">Socio</span></td>
@@ -791,7 +794,7 @@
                 <td><strong>0003</strong></td>
                 <td><strong>Peralta, Diego</strong></td>
                 <td>0358 421 0078</td>
-                <td>dperalta@gmail.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e185918493808d9580a1868c80888dcf828e8c">[email&#160;protected]</a></td>
                 <td>19/01/2020</td>
                 <td>02/08/2025</td>
                 <td><span class="badge badge-gray">Socio</span></td>
@@ -802,7 +805,7 @@
                 <td><strong>0004</strong></td>
                 <td><strong>Gómez, Ana Laura</strong></td>
                 <td>0358 455 9922</td>
-                <td>ana.gomez@yahoo.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b8d9d6d996dfd7d5ddc2f8c1d9d0d7d796dbd7d5">[email&#160;protected]</a></td>
                 <td>11/09/2022</td>
                 <td>15/07/2025</td>
                 <td><span class="badge badge-blue">Grupo fam.</span></td>
@@ -813,7 +816,7 @@
                 <td><strong>0005</strong></td>
                 <td><strong>Torres, Juan</strong></td>
                 <td>0351 488 3310</td>
-                <td>jtorres@gmail.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dac4dfc2c2d5c3f0d7ddd1d9dc9ed3dfdd">[email&#160;protected]</a></td>
                 <td>30/04/2009</td>
                 <td>10/07/2025</td>
                 <td><span class="badge badge-green">Vitalicio</span></td>
@@ -835,7 +838,7 @@
                 <td><strong>0007</strong></td>
                 <td><strong>Díaz, Roberto</strong></td>
                 <td>0358 413 6620</td>
-                <td>rdiaz@gmail.com</td>
+                <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="394b5d505843795e54585055175a5654">[email&#160;protected]</a></td>
                 <td>14/02/2011</td>
                 <td>01/06/2025</td>
                 <td><span class="badge badge-gray">Socio</span></td>
@@ -1108,7 +1111,7 @@
       <div class="card">
         <div class="card-header"><span class="card-title">Identidad visual</span></div>
         <div class="card-body" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-          <div style="width:70px;height:70px;background:var(--cart-blue);border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;flex-shrink:0;">CART</div>
+          <div style="width:70px;height:70px;background:var(--white);border-radius:12px;border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;"><img src="https://res.cloudinary.com/djquur0ct/image/upload/f_auto,q_auto/Logo-CART_kcg35b" alt="Escudo CART" style="width:100%;height:100%;object-fit:contain;"></div>
           <div style="flex:1;min-width:160px;">
             <div style="font-weight:600;margin-bottom:3px;font-size:14px;">Escudo del club</div>
             <div style="font-size:12px;color:var(--gray-400);margin-bottom:8px;">PNG o SVG recomendado</div>
@@ -1142,7 +1145,7 @@
   <div class="ficha-section">
     <h3>Datos personales</h3>
     <div class="ficha-dato"><span>WhatsApp</span><span>0351 412 8890</span></div>
-    <div class="ficha-dato"><span>Email</span><span>lucas.fdz@gmail.com</span></div>
+    <div class="ficha-dato"><span>Email</span><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="acc0d9cfcddf82cac8d6eccbc1cdc5c082cfc3c1">[email&#160;protected]</a></span></div>
     <div class="ficha-dato"><span>DNI</span><span>28.441.922</span></div>
     <div class="ficha-dato"><span>Dirección</span><span>Las Heras 220, Río Tercero</span></div>
   </div>
@@ -1190,7 +1193,7 @@
   </div>
 </nav>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   const sections = {
     dashboard:     { title: 'Dashboard',           sub: 'Resumen general del club',              action: '+ Nuevo Socio',   sec: '📥 Exportar' },
     socios:        { title: 'Socios',              sub: 'Padrón de 1.700 socios',                action: '+ Nuevo Socio',   sec: '📥 Exportar Excel' },
@@ -1241,30 +1244,4 @@
   }
 
   function switchDisc(disc) {
-    ['futbol','basquet','hockey','volley'].forEach(d => {
-      const c = document.getElementById('disc-content-' + d);
-      const t = document.getElementById('dtab-' + d);
-      if (c) c.style.display = d === disc ? '' : 'none';
-      if (t) t.classList.toggle('active', d === disc);
-    });
-  }
-
-  function openFicha() { document.getElementById('ficha-panel').classList.add('open'); }
-  function closeFicha() { document.getElementById('ficha-panel').classList.remove('open'); }
-
-  function openSidebar() {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').classList.add('visible');
-  }
-  function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('visible');
-  }
-
-  function topbarAction() {
-    if (current === 'socios' || current === 'dashboard') openFicha();
-  }
-  function topbarSecAction() { alert('Exportando a Excel...'); }
-</script>
-</body>
-</html>
+    ['futbol','basquet','hockey','volley'
