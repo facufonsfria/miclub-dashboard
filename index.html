@@ -2,103 +2,663 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MiClub</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MiClub — Club Atlético Río Tercero</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-body { margin:0; font-family: sans-serif; display:flex; height:100vh; }
-
-.sidebar {
-  width:240px;
-  background:#0F2560;
-  color:white;
-  padding:10px;
+:root {
+  --blue:#1A3C8F;--blue-dark:#0F2560;--blue-light:#2550B8;--blue-pale:#E8EEF9;
+  --white:#fff;--g50:#F8F9FB;--g100:#EEF0F5;--g200:#DDE1EB;--g400:#9199B0;--g600:#5A6380;--g800:#2D3452;
+  --green:#12B76A;--gp:#ECFDF3;--red:#F04438;--rp:#FEF3F2;--yellow:#F79009;--yp:#FFFAEB;
 }
-
-.nav-item {
-  display:block;
-  padding:10px;
-  cursor:pointer;
-  border:none;
-  background:none;
-  color:white;
-  text-align:left;
-  width:100%;
-}
-
-.nav-item.active {
-  background:rgba(255,255,255,0.2);
-}
-
-.section { display:none; padding:20px; }
-.section.active { display:block; }
-
-.overlay {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-}
-
-.overlay.visible { display:block; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Barlow',sans-serif;background:var(--g50);color:var(--g800);display:flex;height:100dvh;overflow:hidden}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200}
+#overlay.on{display:block}
+.sidebar{width:240px;background:var(--blue-dark);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;z-index:210}
+@media(max-width:768px){.sidebar{position:fixed;top:0;left:0;height:100dvh;transform:translateX(-100%);transition:transform .25s ease}}
+.sidebar.on{transform:translateX(0)!important}
+.s-logo{display:flex;align-items:center;gap:10px;padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.s-badge{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:3px;flex-shrink:0;overflow:hidden}
+.s-badge img{width:100%;height:100%;object-fit:contain}
+.s-name>span:first-child{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;color:#fff;display:block;line-height:1.1}
+.s-name>span:last-child{font-size:10px;color:rgba(255,255,255,.4)}
+.s-nav{flex:1;padding:10px 0;overflow-y:auto}
+.s-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.28);padding:12px 16px 3px}
+.s-nav button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 16px;text-align:left;background:none;border:none;border-left:3px solid transparent;color:rgba(255,255,255,.62);font-size:14px;font-family:'Barlow',sans-serif;cursor:pointer;transition:all .15s;touch-action:manipulation}
+.s-nav button:hover,.s-nav button:active{background:rgba(255,255,255,.06);color:#fff}
+.s-nav button.on{background:rgba(255,255,255,.1);color:#fff;font-weight:600;border-left-color:#fff}
+.s-nav .ic{font-size:15px;width:20px;text-align:center}
+.s-nav .chev{margin-left:auto;font-size:10px;opacity:.5;transition:transform .2s}
+.s-nav button.open .chev{transform:rotate(90deg)}
+.submenu{display:none;background:rgba(0,0,0,.15)}
+.submenu.on{display:block}
+.submenu button{padding:8px 16px 8px 38px;font-size:13px}
+.s-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(255,255,255,.28)}
+.s-foot b{color:rgba(255,255,255,.48)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:56px;background:#fff;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;gap:10px}
+.topbar-l{display:flex;align-items:center;gap:10px;min-width:0}
+#menu-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--g800);padding:4px;font-family:inherit;touch-action:manipulation;flex-shrink:0}
+@media(max-width:768px){#menu-btn{display:flex;align-items:center}}
+#ptitle{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--g800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#psub{font-size:11px;color:var(--g400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'Barlow',sans-serif;transition:all .15s;white-space:nowrap;touch-action:manipulation}
+.btn-p{background:var(--blue);color:#fff}
+.btn-p:hover,.btn-p:active{background:var(--blue-light)}
+.btn-s{background:var(--g100);color:var(--g800)}
+.btn-s:hover,.btn-s:active{background:var(--g200)}
+@media(max-width:500px){.hide-m{display:none!important}.btn{padding:7px 10px;font-size:12px}}
+.avatar{width:32px;height:32px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;cursor:pointer;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:16px}
+@media(min-width:769px){.content{padding:20px 24px}}
+@media(max-width:768px){.content{padding-bottom:72px}}
+.sec{display:none}
+.sec.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:900px){.kpi-grid{grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}}
+.kpi{background:#fff;border-radius:12px;padding:14px 16px;border:1px solid var(--g200);position:relative;overflow:hidden}
+.kpi .lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--g400);margin-bottom:6px}
+.kpi .val{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--g800);line-height:1;margin-bottom:5px}
+.kpi .meta{font-size:11px;color:var(--g400)}
+.up{color:var(--green)}.dn{color:var(--red)}
+.kpi::after{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 12px 12px 0}
+.kpi.bl::after{background:var(--blue)}.kpi.gr::after{background:var(--green)}.kpi.rd::after{background:var(--red)}.kpi.yl::after{background:var(--yellow)}
+.kpi .ki{position:absolute;top:12px;right:14px;font-size:20px;opacity:.12}
+.g2{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+@media(min-width:769px){.g2{grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}}
+.g3{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+@media(min-width:600px){.g3{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.g3{grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}}
+.g31{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+@media(min-width:900px){.g31{grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px}}
+.card{background:#fff;border-radius:12px;border:1px solid var(--g200);overflow:hidden;margin-bottom:12px}
+@media(min-width:769px){.card{margin-bottom:0}}
+.ch{padding:14px 16px 10px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ct{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--g800);letter-spacing:.3px}
+.cb{padding:14px 16px}
+.cbdg{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--blue-pale);color:var(--blue);white-space:nowrap}
+.alist{display:flex;flex-direction:column;gap:8px}
+.ai{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;cursor:pointer}
+.ai.rd{background:var(--rp);color:#B42318}.ai.yl{background:var(--yp);color:#B54708}.ai.gr{background:var(--gp);color:#027A48}.ai.bl{background:var(--blue-pale);color:var(--blue)}
+.ai .aico{font-size:15px;flex-shrink:0}.ai .atx{flex:1;line-height:1.3}.ai .aac{font-size:12px;font-weight:600;text-decoration:underline;white-space:nowrap}
+.pw{margin-bottom:12px}
+.pl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--g600)}
+.pb{height:7px;background:var(--g100);border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px}
+.pf.bl{background:var(--blue)}.pf.gr{background:var(--green)}
+.di{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g100)}
+.di:last-child{border-bottom:none}
+.ddate{width:38px;height:38px;background:var(--blue-pale);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.ddate .dd{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--blue);line-height:1}
+.ddate .dm{font-size:9px;font-weight:600;text-transform:uppercase;color:var(--blue);opacity:.7}
+.dinfo{flex:1;min-width:0}
+.dinfo strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dinfo span{font-size:11px;color:var(--g400)}
+.dmonto{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--blue);flex-shrink:0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:480px}
+thead tr{background:var(--g50)}
+th{padding:9px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);border-bottom:1px solid var(--g200);white-space:nowrap}
+td{padding:11px 12px;font-size:13px;border-bottom:1px solid var(--g100);color:var(--g800)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--g50)}
+.bdg{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bg{background:var(--gp);color:#027A48}.br{background:var(--rp);color:#B42318}.by{background:var(--yp);color:#B54708}
+.bb{background:var(--blue-pale);color:var(--blue)}.bx{background:var(--g100);color:var(--g600)}
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.fi{padding:8px 10px;border:1px solid var(--g200);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;color:var(--g800);background:#fff;outline:none}
+.fi:focus{border-color:var(--blue)}.fi.w{flex:1;min-width:160px}
+.chart{height:140px;display:flex;align-items:flex-end;gap:5px;padding:0 2px}
+.bg-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:opacity .2s}
+.bar:hover{opacity:.75}
+.brl{font-size:10px;color:var(--g400);font-weight:500}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.sr:last-child{border-bottom:none}
+.sr .sl{color:var(--g600);display:flex;align-items:center;gap:6px}
+.sr .sv{font-weight:600;color:var(--g800)}
+.mps{display:flex;align-items:center;gap:8px;font-size:13px;padding:8px 10px;border-radius:8px;margin-bottom:7px}
+.mps.ok{background:var(--gp);color:#027A48}.mps.fail{background:var(--rp);color:#B42318}.mps.pend{background:var(--yp);color:#B54708}
+.dtabs{display:flex;gap:4px;background:var(--g100);border-radius:10px;padding:4px;margin-bottom:16px;overflow-x:auto}
+.dtab{padding:7px 14px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;color:var(--g600);background:none;border:none;font-family:'Barlow',sans-serif;white-space:nowrap;flex-shrink:0;transition:all .15s;touch-action:manipulation}
+.dtab.on{background:#fff;color:var(--blue);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.pcard{background:#fff;border:1px solid var(--g200);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:8px;cursor:pointer;transition:box-shadow .15s}
+.pcard:hover{box-shadow:0 3px 10px rgba(0,0,0,.07)}
+.pfecha{text-align:center;min-width:42px;flex-shrink:0}
+.pfecha .pd{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;color:var(--blue);line-height:1}
+.pfecha .pm{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--blue);opacity:.7}
+.pinfo{flex:1;min-width:0}
+.pinfo .pt{font-weight:600;font-size:14px;color:var(--g800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.pinfo .ps{font-size:12px;color:var(--g400);display:flex;flex-wrap:wrap;gap:6px}
+.pmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.nc{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--g100);cursor:pointer}
+.nc:last-child{border-bottom:none}
+.nimg{width:56px;height:44px;background:var(--blue-pale);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px}
+.ninfo strong{font-size:13px;display:block;margin-bottom:2px}.ninfo span{font-size:11px;color:var(--g400)}
+.cgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+@media(min-width:500px){.cgrid{grid-template-columns:1fr 1fr}}
+.cf label{display:block;font-size:11px;font-weight:600;color:var(--g600);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.cf input,.cf select{width:100%;padding:8px 10px;border:1px solid var(--g200);border-radius:8px;font-size:13px;font-family:'Barlow',sans-serif;color:var(--g800);background:#fff;outline:none}
+.cf input:focus,.cf select:focus{border-color:var(--blue)}
+.cfull{grid-column:1/-1}
+.ar{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g100)}
+.ar:last-child{border-bottom:none}
+.aav{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ainf{flex:1}.ainf strong{font-size:13px;display:block}.ainf span{font-size:11px;color:var(--g400)}
+.fchart{display:flex;align-items:flex-end;gap:8px;height:130px;margin-bottom:16px}
+.fb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.fbf{width:100%;border-radius:6px 6px 0 0;cursor:pointer;transition:opacity .2s}
+.fbf:hover{opacity:.8}
+.fbl{font-size:10px;color:var(--g400);font-weight:500}
+#ficha{display:none;position:fixed;top:0;right:0;width:100%;height:100dvh;background:#fff;z-index:300;overflow-y:auto;flex-direction:column}
+@media(min-width:500px){#ficha{width:360px;border-left:1px solid var(--g200);box-shadow:-4px 0 24px rgba(0,0,0,.1)}}
+#ficha.on{display:flex}
+.fh{background:var(--blue);padding:20px 16px;color:#fff;position:relative}
+#ficha-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;font-family:inherit;touch-action:manipulation}
+.fav{width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin-bottom:8px}
+.fh h2{font-size:17px;font-weight:700;margin-bottom:2px}.fh p{font-size:12px;opacity:.7}
+.fsec{padding:14px 16px;border-bottom:1px solid var(--g100)}
+.fsec h3{font-family:'Barlow Condensed',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);font-weight:600;margin-bottom:8px}
+.fd{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;gap:10px}
+.fd span:first-child{color:var(--g400);flex-shrink:0}.fd span:last-child{font-weight:500;text-align:right}
+.pi{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.pi:last-child{border-bottom:none}
+.qrrow{display:flex;gap:10px;margin-bottom:14px}
+.qrc{display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 12px;background:#fff;border:2px dashed var(--g200);border-radius:10px;cursor:pointer;flex:1;text-align:center;transition:border-color .15s}
+.qrc:hover{border-color:var(--blue)}
+.qrc .qi{font-size:32px}.qrc strong{font-size:13px}.qrc span{font-size:11px;color:var(--g400)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:600px){.sgrid{grid-template-columns:repeat(3,1fr)}}
+.sc{background:#fff;border:1px solid var(--g200);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:box-shadow .15s}
+.sc:hover{box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.sl{height:36px;background:var(--g100);border-radius:6px;margin-bottom:7px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--g400);font-weight:600}
+.sc strong{font-size:13px;display:block}.sc span{font-size:11px;color:var(--g400)}
+.empty{text-align:center;padding:36px 20px;color:var(--g400)}
+.empty .ei{font-size:36px;margin-bottom:10px}.empty p{font-size:13px;margin-top:4px}
+#bnav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--g200);padding:6px 0 8px;z-index:190;box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+@media(max-width:768px){#bnav{display:flex}}
+#bnav .inner{display:flex;width:100%}
+#bnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 4px;background:none;border:none;color:var(--g400);font-size:10px;font-weight:500;font-family:'Barlow',sans-serif;cursor:pointer;transition:color .15s;touch-action:manipulation}
+#bnav button.on{color:var(--blue)}
+#bnav .bi{font-size:20px;line-height:1}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--g200);border-radius:3px}
 </style>
 </head>
-
 <body>
 
-<div class="overlay" id="overlay"></div>
+<div id="overlay"></div>
 
-<div class="sidebar" id="sidebar">
-  <button class="nav-item active">Dashboard</button>
-  <button class="nav-item">Socios</button>
-  <button class="nav-item">Finanzas</button>
-  <button class="nav-item">Información del Club</button>
-  <button class="nav-item">Configuración</button>
+<aside class="sidebar" id="sidebar">
+  <div class="s-logo">
+    <div class="s-badge"><img src="https://res.cloudinary.com/djquur0ct/image/upload/f_auto,q_auto/Logo-CART_kcg35b" alt="CART"></div>
+    <div class="s-name"><span>MiClub</span><span>Atlético Río Tercero</span></div>
+  </div>
+  <nav class="s-nav">
+    <div class="s-label">Principal</div>
+    <button data-goto="dashboard" class="on"><span class="ic">📊</span> Dashboard</button>
+    <button data-goto="socios"><span class="ic">👥</span> Socios</button>
+    <button data-goto="finanzas"><span class="ic">💰</span> Finanzas</button>
+    <div class="s-label">Deportivo</div>
+    <button id="disc-toggle"><span class="ic">⚽</span> Disciplinas <span class="chev">▶</span></button>
+    <div class="submenu" id="submenu">
+      <button data-disc="futbol"><span class="ic">⚽</span> Fútbol</button>
+      <button data-disc="basquet"><span class="ic">🏀</span> Básquet</button>
+      <button data-disc="hockey"><span class="ic">🏑</span> Hockey</button>
+      <button data-disc="volley"><span class="ic">🏐</span> Vóley</button>
+    </div>
+    <div class="s-label">Club</div>
+    <button data-goto="informacion"><span class="ic">🏟️</span> Información del Club</button>
+    <button data-goto="configuracion"><span class="ic">⚙️</span> Configuración</button>
+  </nav>
+  <div class="s-foot">Club: <b>CART · Río Tercero</b><br><span style="font-size:10px;color:rgba(255,255,255,.18)">Powered by MiClub™</span></div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-l">
+      <button id="menu-btn">☰</button>
+      <div><div id="ptitle">Dashboard</div><div id="psub" style="font-size:11px;color:var(--g400)">Resumen general del club</div></div>
+    </div>
+    <div class="topbar-r">
+      <button class="btn btn-s hide-m" id="btn-sec">📥 Exportar</button>
+      <button class="btn btn-p" id="btn-main">+ Nuevo Socio</button>
+      <div class="avatar">CT</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="sec on" id="sec-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi bl"><span class="ki">💰</span><div class="lbl">Ingresos del mes</div><div class="val">$384.200</div><div class="meta"><span class="up">↑ 12%</span> vs. julio</div></div>
+        <div class="kpi gr"><span class="ki">👥</span><div class="lbl">Socios activos</div><div class="val">812</div><div class="meta"><span class="up">+14</span> este mes</div></div>
+        <div class="kpi rd"><span class="ki">⚠️</span><div class="lbl">Morosidad</div><div class="val">53%</div><div class="meta"><span class="dn">900</span> inactivos</div></div>
+        <div class="kpi yl"><span class="ki">🔄</span><div class="lbl">Próx. débitos</div><div class="val">$312k</div><div class="meta">Esta semana · 520</div></div>
+      </div>
+      <div class="g31">
+        <div class="card">
+          <div class="ch"><span class="ct">Ingresos por mes</span><span class="cbdg">2025</span></div>
+          <div class="cb">
+            <div class="chart">
+              <div class="bg-bar"><div class="bar" style="height:48px;background:var(--blue)"></div><div class="brl">Ene</div></div>
+              <div class="bg-bar"><div class="bar" style="height:56px;background:var(--blue)"></div><div class="brl">Feb</div></div>
+              <div class="bg-bar"><div class="bar" style="height:52px;background:var(--blue)"></div><div class="brl">Mar</div></div>
+              <div class="bg-bar"><div class="bar" style="height:65px;background:var(--blue)"></div><div class="brl">Abr</div></div>
+              <div class="bg-bar"><div class="bar" style="height:72px;background:var(--blue)"></div><div class="brl">May</div></div>
+              <div class="bg-bar"><div class="bar" style="height:80px;background:var(--blue)"></div><div class="brl">Jun</div></div>
+              <div class="bg-bar"><div class="bar" style="height:70px;background:var(--g200)"></div><div class="brl">Jul</div></div>
+              <div class="bg-bar"><div class="bar" style="height:92px;background:var(--green)"></div><div class="brl">Ago ★</div></div>
+            </div>
+            <div style="margin-top:14px">
+              <div class="pw"><div class="pl"><span>Cobranza débitos</span><strong>72%</strong></div><div class="pb"><div class="pf gr" style="width:72%"></div></div></div>
+              <div class="pw"><div class="pl"><span>Objetivo mensual</span><strong>64%</strong></div><div class="pb"><div class="pf bl" style="width:64%"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Próximos débitos</span></div>
+          <div class="cb">
+            <div class="di"><div class="ddate"><div class="dd">28</div><div class="dm">Ago</div></div><div class="dinfo"><strong>Cuota social</strong><span>520 socios · MP</span></div><div class="dmonto">$312k</div></div>
+            <div class="di"><div class="ddate"><div class="dd">01</div><div class="dm">Sep</div></div><div class="dinfo"><strong>Abonos fútbol</strong><span>38 abonados</span></div><div class="dmonto">$47k</div></div>
+            <div class="di"><div class="ddate"><div class="dd">05</div><div class="dm">Sep</div></div><div class="dinfo"><strong>Cuota infantil</strong><span>128 socios</span></div><div class="dmonto">$89k</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">⚡ Alertas</span><span class="cbdg" style="background:var(--rp);color:#b42318">3 urgentes</span></div>
+        <div class="cb">
+          <div class="alist">
+            <div class="ai rd"><span class="aico">❌</span><div class="atx"><strong>18 débitos fallidos</strong> — MP rechazó cobro Ago/2025</div><span class="aac">Ver →</span></div>
+            <div class="ai yl"><span class="aico">⏰</span><div class="atx"><strong>42 socios</strong> sin débito automático</div><span class="aac">Invitar →</span></div>
+            <div class="ai yl"><span class="aico">📋</span><div class="atx"><strong>12 altas</strong> pendientes de aprobación</div><span class="aac">Revisar →</span></div>
+            <div class="ai gr"><span class="aico">✅</span><div class="atx"><strong>502 débitos exitosos</strong> procesados este mes</div><span class="aac">Detalle →</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="g3">
+        <div class="card"><div class="ch"><span class="ct">Estado del padrón</span></div><div class="cb">
+          <div class="sr"><span class="sl">🟢 Con débito activo</span><span class="sv">520</span></div>
+          <div class="sr"><span class="sl">🟡 Sin débito</span><span class="sv">292</span></div>
+          <div class="sr"><span class="sl">🔴 Morosos</span><span class="sv">654</span></div>
+          <div class="sr"><span class="sl">⚫ Inactivos/baja</span><span class="sv">234</span></div>
+          <div class="sr"><span class="sl"><strong>Total padrón</strong></span><span class="sv" style="color:var(--blue);font-family:'Barlow Condensed',sans-serif;font-size:20px">1.700</span></div>
+        </div></div>
+        <div class="card"><div class="ch"><span class="ct">Mercado Pago</span></div><div class="cb">
+          <div class="mps ok">✅ 502 exitosos</div>
+          <div class="mps fail">❌ 18 rechazados</div>
+          <div class="mps pend">⏳ 7 pendientes</div>
+          <div class="pw" style="margin-top:10px"><div class="pl"><span>Tasa de éxito</span><strong>94.8%</strong></div><div class="pb"><div class="pf gr" style="width:94%"></div></div></div>
+        </div></div>
+        <div class="card"><div class="ch"><span class="ct">Entradas vendidas</span></div><div class="cb">
+          <div class="sr"><span class="sl">⚽ vs. Defensores</span><span class="sv">312</span></div>
+          <div class="sr"><span class="sl">⚽ vs. 9 de Julio</span><span class="sv">485</span></div>
+          <div class="sr"><span class="sl">🏀 Básquet · Sáb</span><span class="sv">87</span></div>
+          <div class="sr"><span class="sl">💵 Recaudado</span><span class="sv" style="color:var(--green)">$48.200</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- SOCIOS -->
+    <div class="sec" id="sec-socios">
+      <div class="filters">
+        <input class="fi w" type="text" placeholder="🔍  Buscar nombre, apellido o N° de socio...">
+        <select class="fi"><option>Todos los estados</option><option>Activo con débito</option><option>Activo sin débito</option><option>Moroso</option><option>Inactivo</option></select>
+        <select class="fi"><option>Tipo</option><option>Socio</option><option>Grupo familiar</option><option>Vitalicio</option></select>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Padrón de socios</span><span class="cbdg">1.700 en total</span></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>#</th><th>Nombre y Apellido</th><th>WhatsApp</th><th>Email</th><th>Alta socio</th><th>Alta débito</th><th>Tipo</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr id="tr-0001" style="cursor:pointer"><td><strong>0001</strong></td><td><strong>Fernández, Lucas</strong></td><td>0351 412 8890</td><td>lucas.fdz@gmail.com</td><td>12/03/2018</td><td>28/07/2025</td><td><span class="bdg bb">Grupo fam.</span></td><td><span class="bdg bg">Activo ✓</span></td><td><button class="btn btn-s" id="ver-0001" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0002</strong></td><td><strong>Rodríguez, María</strong></td><td>0358 419 2341</td><td>mrodriguez@hotmail.com</td><td>05/06/2015</td><td>—</td><td><span class="bdg bx">Socio</span></td><td><span class="bdg by">Sin débito</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0003</strong></td><td><strong>Peralta, Diego</strong></td><td>0358 421 0078</td><td>dperalta@gmail.com</td><td>19/01/2020</td><td>02/08/2025</td><td><span class="bdg bx">Socio</span></td><td><span class="bdg br">Moroso</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0004</strong></td><td><strong>Gómez, Ana Laura</strong></td><td>0358 455 9922</td><td>ana.gomez@yahoo.com</td><td>11/09/2022</td><td>15/07/2025</td><td><span class="bdg bb">Grupo fam.</span></td><td><span class="bdg bg">Activo ✓</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0005</strong></td><td><strong>Torres, Juan</strong></td><td>0351 488 3310</td><td>jtorres@gmail.com</td><td>30/04/2009</td><td>10/07/2025</td><td><span class="bdg bg">Vitalicio</span></td><td><span class="bdg bg">Activo ✓</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0006</strong></td><td><strong>López, Carla</strong></td><td>0358 400 7741</td><td>—</td><td>22/08/2024</td><td>—</td><td><span class="bdg bx">Socio</span></td><td><span class="bdg by">Sin débito</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+              <tr><td><strong>0007</strong></td><td><strong>Díaz, Roberto</strong></td><td>0358 413 6620</td><td>rdiaz@gmail.com</td><td>14/02/2011</td><td>01/06/2025</td><td><span class="bdg bx">Socio</span></td><td><span class="bdg br">Moroso</span></td><td><button class="btn btn-s" style="padding:4px 8px;font-size:11px">Ver</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:10px 16px;border-top:1px solid var(--g100);font-size:12px;color:var(--g400);display:flex;justify-content:space-between;align-items:center">
+          <span>Mostrando 7 de 1.700</span>
+          <div style="display:flex;gap:6px"><button class="btn btn-s" style="padding:5px 10px;font-size:12px">◀</button><button class="btn btn-s" style="padding:5px 10px;font-size:12px">▶</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANZAS -->
+    <div class="sec" id="sec-finanzas">
+      <div class="kpi-grid">
+        <div class="kpi gr"><div class="lbl">Cobrado</div><div class="val">$384k</div><div class="meta"><span class="up">↑ 12%</span> vs. julio</div></div>
+        <div class="kpi bl"><div class="lbl">Proyectado</div><div class="val">$402k</div><div class="meta">Próximo mes</div></div>
+        <div class="kpi rd"><div class="lbl">En mora</div><div class="val">$218k</div><div class="meta"><span class="dn">654</span> morosos</div></div>
+        <div class="kpi yl"><div class="lbl">Comisión MiClub</div><div class="val">$11.5k</div><div class="meta">3% sobre cuotas</div></div>
+      </div>
+      <div class="g31">
+        <div class="card">
+          <div class="ch"><span class="ct">Ingresos por fuente — Agosto 2025</span></div>
+          <div class="cb">
+            <div class="fchart">
+              <div class="fb"><div class="fbf" style="height:105px;background:var(--blue)"></div><div class="fbl">Cuotas</div></div>
+              <div class="fb"><div class="fbf" style="height:46px;background:var(--green)"></div><div class="fbl">Entradas</div></div>
+              <div class="fb"><div class="fbf" style="height:27px;background:var(--yellow)"></div><div class="fbl">Abonos</div></div>
+              <div class="fb"><div class="fbf" style="height:12px;background:#c084fc"></div><div class="fbl">Otros</div></div>
+            </div>
+            <div class="sr"><span class="sl"><span style="color:var(--blue)">■</span> Cuotas</span><span class="sv">$312.000 · 81%</span></div>
+            <div class="sr"><span class="sl"><span style="color:var(--green)">■</span> Entradas</span><span class="sv">$48.200 · 12.5%</span></div>
+            <div class="sr"><span class="sl"><span style="color:var(--yellow)">■</span> Abonos</span><span class="sv">$24.000 · 6%</span></div>
+            <div class="sr"><span class="sl"><span style="color:#c084fc">■</span> Otros</span><span class="sv">$9.600 · 2.5%</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Proyección 3 meses</span></div>
+          <div class="cb">
+            <div class="sr"><span class="sl">📅 Septiembre</span><span class="sv" style="color:var(--blue)">$402.000</span></div>
+            <div class="sr"><span class="sl">📅 Octubre</span><span class="sv" style="color:var(--blue)">$418.000</span></div>
+            <div class="sr"><span class="sl">📅 Noviembre</span><span class="sv" style="color:var(--blue)">$435.000</span></div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--g100)">
+              <div class="sr"><span class="sl">Comisión MiClub</span><span class="sv" style="color:var(--g400)">−$38.250</span></div>
+              <div class="sr"><span class="sl"><strong>Neto al club</strong></span><span class="sv" style="color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:20px">$1.216.750</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Historial de débitos MP</span></div>
+        <div class="tw"><table>
+          <thead><tr><th>Fecha</th><th>Concepto</th><th>Socios</th><th>Bruto</th><th>OK</th><th>Fallidos</th><th>Comisión</th><th>Neto</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>28/08/25</td><td>Cuota Ago</td><td>527</td><td>$316.200</td><td>509</td><td>18</td><td>$9.486</td><td>$306.714</td><td><span class="bdg bg">OK</span></td></tr>
+            <tr><td>28/07/25</td><td>Cuota Jul</td><td>514</td><td>$308.400</td><td>498</td><td>16</td><td>$9.252</td><td>$299.148</td><td><span class="bdg bg">OK</span></td></tr>
+            <tr><td>28/06/25</td><td>Cuota Jun</td><td>502</td><td>$301.200</td><td>489</td><td>13</td><td>$9.036</td><td>$292.164</td><td><span class="bdg bg">OK</span></td></tr>
+            <tr><td>01/08/25</td><td>Abonos fútbol</td><td>38</td><td>$47.500</td><td>36</td><td>2</td><td>$1.425</td><td>$46.075</td><td><span class="bdg bg">OK</span></td></tr>
+            <tr><td>05/09/25</td><td>Cuota infantil</td><td>128</td><td>$89.600</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="bdg by">Pendiente</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- DISCIPLINAS -->
+    <div class="sec" id="sec-disciplinas">
+      <div class="dtabs">
+        <button class="dtab on" data-disc="futbol">⚽ Fútbol</button>
+        <button class="dtab" data-disc="basquet">🏀 Básquet</button>
+        <button class="dtab" data-disc="hockey">🏑 Hockey</button>
+        <button class="dtab" data-disc="volley">🏐 Vóley</button>
+      </div>
+      <div id="dc-futbol">
+        <div class="g3">
+          <div class="kpi bl"><div class="lbl">Entradas vendidas</div><div class="val">797</div><div class="meta">Este mes</div></div>
+          <div class="kpi gr"><div class="lbl">Abonados activos</div><div class="val">38</div><div class="meta"><span class="up">+4</span> nuevos</div></div>
+          <div class="kpi yl"><div class="lbl">Próximo partido</div><div class="val" style="font-size:18px">Dom 01/09</div><div class="meta">vs. Defensores</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><span class="ct">Fixture — Primera División</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">+ Partido</button></div>
+            <div class="cb">
+              <div style="margin-bottom:10px"><select class="fi" style="width:100%"><option>Primera División</option><option>Reserva</option><option>Sub-17</option><option>Sub-15</option><option>Categoría 2012</option></select></div>
+              <div class="pcard"><div class="pfecha"><div class="pd">01</div><div class="pm">Sep</div></div><div class="pinfo"><div class="pt">CART vs. Defensores del Chaco</div><div class="ps"><span>🏟️ Estadio CART</span><span>🕑 16:00hs</span></div></div><div class="pmeta"><span class="bdg bg">Local</span><span style="font-size:11px;color:var(--g400)">$800</span></div></div>
+              <div class="pcard"><div class="pfecha"><div class="pd">08</div><div class="pm">Sep</div></div><div class="pinfo"><div class="pt">9 de Julio vs. CART</div><div class="ps"><span>✈️ Visitante</span><span>🕑 15:30hs</span></div></div><div class="pmeta"><span class="bdg bx">Visitante</span></div></div>
+              <div class="pcard" style="opacity:.6"><div class="pfecha"><div class="pd">15</div><div class="pm">Sep</div></div><div class="pinfo"><div class="pt">CART vs. Racing Río Tercero</div><div class="ps"><span>🏟️ Estadio CART</span><span>Por confirmar</span></div></div><div class="pmeta"><span class="bdg by">A confirmar</span></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Entradas y Abonos</span></div>
+            <div class="cb">
+              <div class="qrrow">
+                <div class="qrc"><span class="qi">📱</span><strong>Escanear QR</strong><span>Validar en puerta</span></div>
+                <div class="qrc"><span class="qi">🎟️</span><strong>Vender entrada</strong><span>Generar QR</span></div>
+              </div>
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin-bottom:8px">Abonados activos</div>
+              <div class="tw"><table><thead><tr><th>#Soc</th><th>Nombre</th><th>Sector</th><th>Estado</th></tr></thead><tbody>
+                <tr><td>0001</td><td>Fernández, L.</td><td>Platea</td><td><span class="bdg bg">Activo</span></td></tr>
+                <tr><td>0004</td><td>Gómez, A.</td><td>Popular</td><td><span class="bdg bg">Activo</span></td></tr>
+                <tr><td>0005</td><td>Torres, J.</td><td>Platea</td><td><span class="bdg by">Vence 30/09</span></td></tr>
+                <tr><td>0018</td><td>Martínez, P.</td><td>Popular</td><td><span class="bdg br">Vencido</span></td></tr>
+              </tbody></table></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="dc-basquet" style="display:none">
+        <div class="g3" style="margin-bottom:16px">
+          <div class="kpi bl"><div class="lbl">Entradas</div><div class="val">87</div></div>
+          <div class="kpi gr"><div class="lbl">Abonados</div><div class="val">12</div></div>
+          <div class="kpi yl"><div class="lbl">Próximo</div><div class="val" style="font-size:18px">Sáb 31/08</div></div>
+        </div>
+        <div class="card"><div class="ch"><span class="ct">Fixture — Básquet</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">+ Partido</button></div><div class="cb"><div class="pcard"><div class="pfecha"><div class="pd">31</div><div class="pm">Ago</div></div><div class="pinfo"><div class="pt">CART vs. Asoc. Atletismo</div><div class="ps"><span>🏟️ Pabellón CART</span><span>🕑 20:00hs</span></div></div><div class="pmeta"><span class="bdg bg">Local</span></div></div></div></div>
+      </div>
+      <div id="dc-hockey" style="display:none"><div class="empty"><div class="ei">🏑</div><strong style="color:var(--g600)">Hockey — sin partidos cargados</strong><p>Agregá el fixture desde el botón de abajo</p><button class="btn btn-p" style="margin-top:14px">+ Primer partido</button></div></div>
+      <div id="dc-volley" style="display:none"><div class="empty"><div class="ei">🏐</div><strong style="color:var(--g600)">Vóley — sin partidos cargados</strong><p>Agregá el fixture desde el botón de abajo</p><button class="btn btn-p" style="margin-top:14px">+ Primer partido</button></div></div>
+    </div>
+
+    <!-- INFORMACIÓN -->
+    <div class="sec" id="sec-informacion">
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="ct">Noticias del club</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">+ Noticia</button></div>
+          <div class="cb">
+            <div class="nc"><div class="nimg">📰</div><div class="ninfo"><strong>CART campeón de la Liga Regional 2025</strong><span>20/08/2025 · 312 vistas</span></div></div>
+            <div class="nc"><div class="nimg">🏋️</div><div class="ninfo"><strong>Nuevo gimnasio para los socios</strong><span>15/08/2025 · 187 vistas</span></div></div>
+            <div class="nc"><div class="nimg">👕</div><div class="ninfo"><strong>Camiseta nueva temporada disponible</strong><span>10/08/2025 · 524 vistas</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Notificaciones push</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">📢 Enviar</button></div>
+          <div class="cb">
+            <div class="ai bl" style="margin-bottom:8px"><span class="aico">📲</span><div class="atx"><strong>Recordatorio de cuota</strong><br><span style="font-size:11px">520 socios · 28/08 · Apertura: 71%</span></div></div>
+            <div class="ai gr" style="margin-bottom:8px"><span class="aico">⚽</span><div class="atx"><strong>Partido este domingo</strong><br><span style="font-size:11px">Todos · 26/08 · Apertura: 84%</span></div></div>
+            <div class="ai yl"><span class="aico">🎟️</span><div class="atx"><strong>Entradas disponibles online</strong><br><span style="font-size:11px">Activos · 25/08 · Apertura: 68%</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Sponsors</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">+ Sponsor</button></div>
+        <div class="cb">
+          <div class="sgrid">
+            <div class="sc"><div class="sl">LOGO</div><strong>Construcciones López</strong><span>Principal · dic/25</span></div>
+            <div class="sc"><div class="sl">LOGO</div><strong>Agropecuaria del Sur</strong><span>Secundario · oct/25</span></div>
+            <div class="sc" style="border-style:dashed;background:var(--g50)"><div class="sl" style="background:transparent;color:var(--g200);font-size:26px">+</div><strong style="color:var(--g400)">Agregar sponsor</strong><span>Slot disponible</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURACIÓN -->
+    <div class="sec" id="sec-configuracion">
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="ct">Datos del club</span></div>
+          <div class="cb">
+            <div class="cgrid">
+              <div class="cf"><label>Nombre del club</label><input value="Club Atlético Río Tercero"></div>
+              <div class="cf"><label>Sigla</label><input value="CART"></div>
+              <div class="cf"><label>CUIT</label><input value="30-12345678-9"></div>
+              <div class="cf"><label>Teléfono</label><input value="0358 421 0000"></div>
+              <div class="cf cfull"><label>Dirección</label><input value="Av. San Martín 1450, Río Tercero, Córdoba"></div>
+              <div class="cf"><label>Email</label><input value="secretaria@cart.com.ar"></div>
+              <div class="cf"><label>Ciudad</label><input value="Río Tercero, Córdoba"></div>
+            </div>
+            <button class="btn btn-p">💾 Guardar cambios</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Mercado Pago</span></div>
+          <div class="cb">
+            <div class="mps ok" style="margin-bottom:12px">✅ Cuenta vinculada y activa</div>
+            <div class="cgrid">
+              <div class="cf cfull"><label>Email MP</label><input value="tesoreria@cart.com.ar"></div>
+              <div class="cf"><label>Reintentos</label><select><option>3 intentos</option><option>2 intentos</option><option>Sin reintentos</option></select></div>
+              <div class="cf"><label>Intervalo</label><select><option>Cada 3 días</option><option>Cada 5 días</option><option>Cada 7 días</option></select></div>
+              <div class="cf"><label>Cuota General</label><input value="$600"></div>
+              <div class="cf"><label>Cuota Infantil</label><input value="$400"></div>
+            </div>
+            <button class="btn btn-p">💾 Guardar</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Administradores</span><button class="btn btn-p" style="padding:5px 10px;font-size:12px">+ Agregar</button></div>
+        <div class="cb">
+          <div class="ar"><div class="aav">RG</div><div class="ainf"><strong>Ricardo González</strong><span>Presidente</span></div><span class="bdg bb">Admin total</span></div>
+          <div class="ar"><div class="aav">CT</div><div class="ainf"><strong>Carlos Tesorero</strong><span>Tesorería</span></div><span class="bdg bg">Finanzas</span></div>
+          <div class="ar"><div class="aav">MS</div><div class="ainf"><strong>María Secretaria</strong><span>Secretaría</span></div><span class="bdg bx">Solo lectura</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ct">Identidad visual</span></div>
+        <div class="cb" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="width:70px;height:70px;background:#fff;border-radius:12px;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0"><img src="https://res.cloudinary.com/djquur0ct/image/upload/f_auto,q_auto/Logo-CART_kcg35b" alt="CART" style="width:100%;height:100%;object-fit:contain"></div>
+          <div style="flex:1;min-width:160px"><div style="font-weight:600;margin-bottom:3px;font-size:14px">Escudo del club</div><div style="font-size:12px;color:var(--g400);margin-bottom:8px">PNG o SVG recomendado</div><button class="btn btn-s">📁 Subir imagen</button></div>
+          <div style="display:flex;gap:10px">
+            <div style="text-align:center"><div style="width:36px;height:36px;background:#1A3C8F;border-radius:8px;margin:0 auto 4px"></div><span style="font-size:10px;color:var(--g400)">#1A3C8F</span></div>
+            <div style="text-align:center"><div style="width:36px;height:36px;background:#fff;border-radius:8px;border:1px solid var(--g200);margin:0 auto 4px"></div><span style="font-size:10px;color:var(--g400)">#FFFFFF</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div style="flex:1;">
-  <div id="sec-dashboard" class="section active">Dashboard</div>
-  <div id="sec-socios" class="section">Socios</div>
-  <div id="sec-finanzas" class="section">Finanzas</div>
-  <div id="sec-informacion" class="section">Información</div>
-  <div id="sec-configuracion" class="section">Configuración</div>
+<!-- FICHA -->
+<div id="ficha">
+  <div class="fh">
+    <button id="ficha-close">✕</button>
+    <div class="fav">LF</div>
+    <h2>Fernández, Lucas</h2>
+    <p>Socio N° 0001 · Grupo familiar · Desde 2018</p>
+  </div>
+  <div class="fsec"><h3>Estado</h3><div class="mps ok">✅ Débito automático activo (MP)</div><div class="fd"><span>Estado</span><span><span class="bdg bg">Activo ✓</span></span></div><div class="fd"><span>Cuota al día</span><span style="color:var(--green);font-weight:600">Sí</span></div></div>
+  <div class="fsec"><h3>Datos personales</h3><div class="fd"><span>WhatsApp</span><span>0351 412 8890</span></div><div class="fd"><span>Email</span><span>lucas.fdz@gmail.com</span></div><div class="fd"><span>DNI</span><span>28.441.922</span></div><div class="fd"><span>Dirección</span><span>Las Heras 220, Río Tercero</span></div></div>
+  <div class="fsec"><h3>Fechas clave</h3><div class="fd"><span>Alta como socio</span><span>12/03/2018</span></div><div class="fd"><span>Alta débito</span><span>28/07/2025</span></div><div class="fd"><span>Tipo</span><span>Grupo familiar</span></div></div>
+  <div class="fsec"><h3>Historial de pagos</h3>
+    <div class="pi"><span class="bdg bg" style="width:52px;justify-content:center">✓ Ago</span><span style="flex:1;margin-left:6px;font-size:13px">Cuota Agosto 2025</span><span style="font-weight:600;color:var(--green)">$600</span></div>
+    <div class="pi"><span class="bdg bg" style="width:52px;justify-content:center">✓ Jul</span><span style="flex:1;margin-left:6px;font-size:13px">Cuota Julio 2025</span><span style="font-weight:600;color:var(--green)">$600</span></div>
+    <div class="pi"><span class="bdg br" style="width:52px;justify-content:center">✗ Jun</span><span style="flex:1;margin-left:6px;font-size:13px">Cuota Junio 2025</span><span style="font-weight:600;color:var(--red)">Fallido</span></div>
+    <div class="pi"><span class="bdg bg" style="width:52px;justify-content:center">✓ May</span><span style="flex:1;margin-left:6px;font-size:13px">Cuota Mayo 2025</span><span style="font-weight:600;color:var(--green)">$600</span></div>
+  </div>
+  <div class="fsec"><h3>Acciones</h3><div style="display:flex;flex-direction:column;gap:8px">
+    <button class="btn btn-s" style="width:100%;justify-content:center">✏️ Editar datos</button>
+    <button class="btn btn-s" style="width:100%;justify-content:center">📲 Enviar recordatorio</button>
+    <button class="btn btn-s" style="width:100%;justify-content:center;color:var(--red)">🗑️ Dar de baja</button>
+  </div></div>
 </div>
+
+<!-- BOTTOM NAV -->
+<nav id="bnav">
+  <div class="inner">
+    <button data-bnav="dashboard" class="on"><span class="bi">📊</span><span>Inicio</span></button>
+    <button data-bnav="socios"><span class="bi">👥</span><span>Socios</span></button>
+    <button data-bnav="finanzas"><span class="bi">💰</span><span>Finanzas</span></button>
+    <button data-bnav="disciplinas"><span class="bi">⚽</span><span>Deporte</span></button>
+    <button data-bnav="menu"><span class="bi">☰</span><span>Más</span></button>
+  </div>
+</nav>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+const META = {
+  dashboard:     {title:'Dashboard',            sub:'Resumen general del club',             main:'+ Nuevo Socio', sec:'📥 Exportar'},
+  socios:        {title:'Socios',               sub:'Padrón de 1.700 socios',              main:'+ Nuevo Socio', sec:'📥 Exportar Excel'},
+  finanzas:      {title:'Finanzas',             sub:'Ingresos, mora y proyección',          main:'📊 Reporte',    sec:'📥 Exportar'},
+  disciplinas:   {title:'Disciplinas',          sub:'Fútbol · Básquet · Hockey · Vóley',   main:'+ Partido',     sec:'📥 Exportar'},
+  informacion:   {title:'Información del Club', sub:'Noticias, sponsors y notificaciones', main:'+ Noticia',     sec:'📥 Exportar'},
+  configuracion: {title:'Configuración',        sub:'Datos, integraciones y permisos',     main:'💾 Guardar',    sec:'↩️ Restaurar'},
+};
+let current = 'dashboard';
 
-  const sections = document.querySelectorAll(".section");
-  const navItems = document.querySelectorAll(".nav-item");
+function goTo(name) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  const sec = document.getElementById('sec-' + name);
+  if (sec) sec.classList.add('on');
+  document.querySelectorAll('.s-nav button[data-goto]').forEach(b => b.classList.remove('on'));
+  const nb = document.querySelector('.s-nav button[data-goto="' + name + '"]');
+  if (nb) nb.classList.add('on');
+  const m = META[name] || {};
+  document.getElementById('ptitle').textContent = m.title || name;
+  document.getElementById('psub').textContent = m.sub || '';
+  document.getElementById('btn-main').textContent = m.main || '+ Nuevo';
+  document.getElementById('btn-sec').textContent = m.sec || '📥 Exportar';
+  current = name;
+  closeSidebar();
+}
 
-  function goTo(sectionId, el) {
-    sections.forEach(sec => sec.classList.remove("active"));
-    document.getElementById("sec-" + sectionId).classList.add("active");
+function openSidebar()  { document.getElementById('sidebar').classList.add('on'); document.getElementById('overlay').classList.add('on'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('on'); document.getElementById('overlay').classList.remove('on'); }
+function openFicha()    { document.getElementById('ficha').classList.add('on'); }
+function closeFicha()   { document.getElementById('ficha').classList.remove('on'); }
 
-    navItems.forEach(i => i.classList.remove("active"));
-    if (el) el.classList.add("active");
-  }
-
-  navItems.forEach(item => {
-    item.addEventListener("click", function () {
-
-      const text = item.innerText.toLowerCase();
-
-      const map = {
-        "dashboard": "dashboard",
-        "socios": "socios",
-        "finanzas": "finanzas",
-        "información del club": "informacion",
-        "configuración": "configuracion"
-      };
-
-      const key = Object.keys(map).find(k => text.includes(k));
-      if (key) goTo(map[key], item);
-
-    });
+function switchDisc(disc) {
+  ['futbol','basquet','hockey','volley'].forEach(d => {
+    const el = document.getElementById('dc-' + d);
+    const tb = document.querySelector('.dtab[data-disc="' + d + '"]');
+    if (el) el.style.display = d === disc ? '' : 'none';
+    if (tb) tb.classList.toggle('on', d === disc);
   });
+}
 
+// Sidebar nav — goto
+document.querySelectorAll('.s-nav button[data-goto]').forEach(btn => {
+  btn.addEventListener('click', function() { goTo(this.dataset.goto); });
+});
+
+// Sidebar nav — disc items
+document.querySelectorAll('.submenu button[data-disc]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    goTo('disciplinas');
+    switchDisc(this.dataset.disc);
+    document.querySelector('.s-nav button[data-goto]')?.classList.remove('on');
+    document.getElementById('disc-toggle').classList.add('on');
+  });
+});
+
+// Disc toggle
+document.getElementById('disc-toggle').addEventListener('click', function() {
+  const sub = document.getElementById('submenu');
+  sub.classList.toggle('on');
+  this.classList.toggle('open');
+  if (sub.classList.contains('on')) { goTo('disciplinas'); this.classList.add('on'); }
+});
+
+// Disc tabs inside section
+document.querySelectorAll('.dtab[data-disc]').forEach(btn => {
+  btn.addEventListener('click', function() { switchDisc(this.dataset.disc); });
+});
+
+// Bottom nav
+document.querySelectorAll('#bnav button[data-bnav]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const t = this.dataset.bnav;
+    if (t === 'menu') { openSidebar(); return; }
+    goTo(t);
+    document.querySelectorAll('#bnav button').forEach(b => b.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+// Hamburger
+document.getElementById('menu-btn').addEventListener('click', openSidebar);
+
+// Overlay
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+// Ficha
+document.getElementById('ficha-close').addEventListener('click', closeFicha);
+const tr0001 = document.getElementById('tr-0001');
+const ver0001 = document.getElementById('ver-0001');
+if (tr0001) tr0001.addEventListener('click', openFicha);
+if (ver0001) ver0001.addEventListener('click', function(e) { e.stopPropagation(); openFicha(); });
+document.getElementById('btn-main').addEventListener('click', function() {
+  if (current === 'socios' || current === 'dashboard') openFicha();
 });
 </script>
-
 </body>
 </html>
